@@ -1,0 +1,54 @@
+%{
+# Some bits of this are snagged from https://github.com/nddrylliog/nagaqueen/blob/master/grammar/nagaqueen.leg
+
+#include <coerce.h>
+
+%}
+
+Stmt    = - e:Expr EOL                  { printf("%d\n", e); }
+        | ( !EOL . )* EOL               { printf("error\n"); }
+
+Expr    = i:ID ASSIGN s:Sum             { $$= vars[i]= s; }
+        | s:Sum                         { $$= s; }
+
+#Sum     = l:Product
+#                ( PLUS  r:Product       { l += r; }
+#                | MINUS r:Product       { l -= r; }
+#                )*                      { $$= l; }
+
+#Product = l:Value
+#                ( TIMES  r:Value        { l *= r; }
+#                | DIVIDE r:Value        { l /= r; }
+#                )*                      { $$= l; }
+
+Value   = i:NUMBER                      { $$= atoi(yytext); }
+        | i:ID !ASSIGN                  { $$= vars[i]; }
+        | LIST_OPEN i:Expr LIST_CLOSE   { $$= i; }
+
+NUMBER  = < [0-9]+ >    -               { $$= atoi(yytext); }
+ID      = < [a-zA-Z+-*/=-_!@#$%^&]+  >   -               { $$= yytext[0] - 'a'; }
+ASSIGN  = ':'           -
+#PLUS    = '+'           -
+#MINUS   = '-'           -
+#TIMES   = '*'           -
+#DIVIDE  = '/'           -
+LIST_OPEN    = '('      -
+LIST_CLOSE   = ')'      -
+LAMBDA_OPEN  = '['      -
+LAMBDA_CLOSE = ']'      -
+
+-       = [ \t]*
+EOL     = '\n' | '\r\n' | '\r' | ';'
+
+%%
+
+//Value *define(
+
+int main()
+{
+  GREG g;
+  memset(&g, 0, sizeof(GREG));
+  while (yyparse(&g));
+
+  return 0;
+}
