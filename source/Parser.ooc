@@ -19,7 +19,7 @@ Parser: class {
     }
 
     parse: func {
-        decadenceParse(this, path toCString())
+        coerceParse(this, path toCString())
     }
 
     gotNumber: unmangled func (number: CString) -> Number {
@@ -46,6 +46,6 @@ Parser: class {
 
 stringClone: unmangled func (s: CString) -> CString { s clone() }
 
-// decadenceParser's prototype
-decadenceParse: extern proto func (this: Parser, path: CString)
+// coerceParser's prototype
+coerceParse: extern proto func (this: Parser, path: CString)
 
