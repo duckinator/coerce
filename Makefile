@@ -1,11 +1,17 @@
-all: coerce
+.PHONY: all test clean
 
-grammar/coere.c: grammar/coere.leg
-	greg -o $@ $<
+all:
+	mkdir -p generated
+	greg coerce.leg > generated/parser.c
+	rock -sourcepath=source coerce.ooc generated/parser.c -outpath=generated -v -g -nolines
 
-coerce: grammar/coere.c
-			
+test:
+	./coerce tests/assign.coere
+	./coerce tests/multiline.coere
+	./coerce tests/number.coere
+	./coerce tests/print.coere
+	./coerce tests/lambda.coere
+
 clean:
-	rm -rf grammar/coere.c coerce
+	rm -rf generated coerce .libs
 
-.PHONY: clean
