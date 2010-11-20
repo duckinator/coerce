@@ -52,7 +52,7 @@ char *stringClone(char *str);
 
 # As you notice, we can name rules, ie. here the Expr is captured as 'e'
 # And then we can use it in the actino code.
-Program = ([ \t\n])* e:Expr { onExpr(core->this, e) }
+Program = ([ \t\n])* e:Expr { gotExpr(core->this, e) }
 
 # Try to parse a BinaryOp first, if it fails, parse a Number.
 Expr = (Assignment | BinaryOp) -
@@ -72,6 +72,8 @@ Name = < [a-zA-Z_] [a-zA-Z0-9_]* > { $$=stringClone(yytext) }
 # A BinaryOp = a Number, and then 0 or more times an operator and another BinaryOp
 BinaryOp = l:Value
           (- o:Operator - r:Value { $$=l=gotBinaryOp(core->this, o, l, r) })*
+
+List = ('(' WS inner:Value WS ')' - { $$=gotList(core->this, inner); })
 
 Operator = < ("+" | "*" | "/" | "-") > { $$=stringClone(yytext) }
 

@@ -7,7 +7,7 @@
 import structs/ArrayList
 import os/Process
 import io/[File, FileWriter]
-import ast/[Node, Expr, Number, BinaryOp, Program, Visitor, Assignment, VariableAccess]
+import ast/[Node, Expr, Number, BinaryOp, Program, Visitor, Assignment, VariableAccess, List]
 
 /**
  * Our simple backend, which creates a C file
@@ -30,6 +30,10 @@ Backend: class implements Visitor {
             fw write("    ")
             if(e instanceOf?(Expr)) {
                 fw write("printf(\"%d\\n\", ")
+                e accept(this)
+                fw write(")")
+            } else if(e instanceOf?(List)) {
+                fw write("printf(\"%s\\n\", ")
                 e accept(this)
                 fw write(")")
             } else {
@@ -72,6 +76,10 @@ Backend: class implements Visitor {
         b left accept(this)
         fw write(b type)
         b right accept(this)
+    }
+
+    visitList: func(l: List) {
+        l toString() println()
     }
 
 }

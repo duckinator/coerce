@@ -4,7 +4,7 @@
  * @author Nick Markwell
  */
 
-import ast/[Node, Expr, Number, BinaryOp, Program, VariableAccess, Assignment]
+import ast/[Node, Expr, Number, BinaryOp, Program, VariableAccess, Assignment, List]
 
 /**
  * Our simple parser that creates an AST
@@ -38,8 +38,12 @@ Parser: class {
         VariableAccess new(name toString() clone())
     }
 
-    onExpr: unmangled func (n: Node) {
+    gotExpr: unmangled func (n: Node) {
         program body add(n)
+    }
+
+    gotList: unmangled func (inner: CString) -> List {
+        List new(inner toString())
     }
 
 }

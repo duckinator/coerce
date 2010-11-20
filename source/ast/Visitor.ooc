@@ -4,7 +4,7 @@
  * @author Nick Markwell
  */
 
-import Number, BinaryOp, VariableAccess, Assignment
+import Number, BinaryOp, VariableAccess, Assignment, List
 
 Visitor: interface {
 
@@ -12,6 +12,7 @@ Visitor: interface {
     visitBinaryOp: func (b: BinaryOp)
     visitAssignment: func (a: Assignment)
     visitVariableAccess: func (v: VariableAccess)
+    visitList: func(l: List)
 
 }
 
