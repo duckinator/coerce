@@ -1,3 +1,9 @@
 generated
 coerce
 .libs
+tests/assign
+tests/lambda
+tests/multiline
+tests/number
+tests/print
+tests/*.c

@@ -13,5 +13,5 @@ test:
 	./coerce tests/lambda.coere
 
 clean:
-	rm -rf generated coerce .libs
+	rm -rf generated coerce .libs tests/assign tests/lambda tests/multiline tests/number tests/print tests/*.c
 
