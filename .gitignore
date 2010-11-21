@@ -6,4 +6,8 @@ tests/lambda
 tests/multiline
 tests/number
 tests/print
+tests/string
+tests/char
+tests/bool
+tests/list
 tests/*.c

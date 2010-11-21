@@ -11,13 +11,17 @@ test: coerce
 	./coerce tests/assign.coere
 	./coerce tests/multiline.coere
 	./coerce tests/number.coere
+	./coerce tests/negative_number.coere
 	./coerce tests/print.coere
 	./coerce tests/lambda.coere
 	./coerce tests/list.coere
+	./coerce tests/string.coere
+	./coerce tests/char.coere
+	./coerce tests/bool.coere
 
 runtests: test
 	(./runtests.sh)
 
 clean:
-	rm -rf generated coerce .libs tests/assign tests/lambda tests/multiline tests/number tests/print tests/*.c
+	rm -rf generated coerce .libs tests/assign tests/lambda tests/multiline tests/number tests/print tests/list tests/string tests/char tests/bool tests/*.c
 
