@@ -3,18 +3,33 @@
  */
 
 import Node, Visitor
+import structs/ArrayList
 
 /**
  * Represents access to a variable
  */
 List: class extends Node {
+    body := ArrayList<Node> new()
 
-    inner: String
+    init: func { }
 
-    init: func (=inner) {}
+    add: func(n: Node) {
+        body add(n)
+    }
 
     toString: func -> String {
-        inner
+        if(body size > 0) {
+            b := Buffer new()
+            b append("(")
+            body size times(|i|
+                b append(body[i] toString())
+                if(i < (body size - 1)) b append(' ')
+            )
+            b append(")")
+            b toString()
+        } else {
+            "(nil)"
+        }
     }
 
     accept: func (v: Visitor) {

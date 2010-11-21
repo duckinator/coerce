@@ -32,10 +32,6 @@ Backend: class implements Visitor {
                 fw write("printf(\"%d\\n\", ")
                 e accept(this)
                 fw write(")")
-            } else if(e instanceOf?(List)) {
-                fw write("printf(\"%s\\n\", ")
-                e accept(this)
-                fw write(")")
             } else {
                 e accept(this)
             }
@@ -79,7 +75,9 @@ Backend: class implements Visitor {
     }
 
     visitList: func(l: List) {
-        l toString() println()
+        fw write("printf(\"%s\\n\", \"")
+        fw write(l toString())
+        fw write("\")")
     }
 
 }

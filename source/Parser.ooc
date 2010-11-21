@@ -13,6 +13,8 @@ Parser: class {
 
     path: String
     program: Program
+    list: List
+    inList := false
 
     init: func (=path) {
         program = Program new(path)
@@ -23,29 +25,49 @@ Parser: class {
     }
 
     gotNumber: unmangled func (number: CString) -> Number {
-        Number new(number toString() toLLong())
+        ret := Number new(number toString() toLLong())
+        if (inList) list add(ret)
+        ret
     }
 
     gotBinaryOp: unmangled func (type: CString, left, right: Expr) -> BinaryOp {
-        BinaryOp new(type toString() clone(), left, right)
+        ret := BinaryOp new(type toString() clone(), left, right)
+        if (inList) list add(ret)
+        ret
     }
 
     gotAssignment: unmangled func (left: CString, right: Expr) -> Assignment {
-        Assignment new(left clone() toString(), right)
+        ret := Assignment new(left clone() toString(), right)
+        if (inList) list add(ret)
+        ret
     }
 
     gotVariableAccess: unmangled func (name: CString) -> VariableAccess {
-        VariableAccess new(name toString() clone())
+        ret := VariableAccess new(name toString() clone())
+        if (inList) list add(ret)
+        ret
     }
 
     gotExpr: unmangled func (n: Node) {
-        program body add(n)
+        if (inList)
+            list add(n)
+        else
+            program body add(n)
     }
 
-    gotList: unmangled func (inner: CString) -> List {
+    /*gotList: unmangled func (inner: CString) -> List {
         List new(inner toString())
+    }*/
+
+    gotListStart: unmangled func {
+        list = List new()
+        inList = true
     }
 
+    gotListEnd: unmangled func -> List {
+        inList = false
+        list
+    }
 }
 
 stringClone: unmangled func (s: CString) -> CString { s clone() }
