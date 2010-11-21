@@ -1,11 +1,13 @@
 .PHONY: all test runtests clean
 
-all:
+all: coerce
+
+coerce:
 	mkdir -p generated
 	greg coerce.leg > generated/parser.c
 	rock -clang -sourcepath=source coerce.ooc generated/parser.c -outpath=generated -v -g -nolines
 
-test:
+test: coerce
 	./coerce tests/assign.coere
 	./coerce tests/multiline.coere
 	./coerce tests/number.coere
