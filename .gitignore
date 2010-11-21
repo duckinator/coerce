@@ -10,4 +10,5 @@ tests/string
 tests/char
 tests/bool
 tests/list
+tests/negative_number
 tests/*.c
