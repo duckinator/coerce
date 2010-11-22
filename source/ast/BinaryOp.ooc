@@ -11,6 +11,7 @@ import Expr, Visitor
  */
 BinaryOp: class extends Expr {
 
+    type: String
     left, right: Expr
 
     init: func (=type, =left, =right) {}
