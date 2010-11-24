@@ -91,7 +91,7 @@ Name = < [a-zA-Z_] [a-zA-Z0-9_]* > - { $$=stringClone(yytext) }
 # BinaryOp = l:Value
 #          (- o:Operator - r:Value { $$=l=gotBinaryOp(core->this, o, l, r) })*
 
-List        = '(' WS { gotListStart(core->this); } (
+List        = OPEN_PAREN WS { gotListStart(core->this); } (
                             v:Value
                ((WS | EOL) v:Value)*
                )? WS CLOSE_PAREN ~{ printf("Malformed list! (%i)\n", G->pos + G->offset); }

@@ -23,5 +23,5 @@ runtests: test
 	(./runtests.sh)
 
 clean:
-	rm -rf generated coerce .libs tests/assign tests/lambda tests/multiline tests/number tests/print tests/list tests/string tests/char tests/bool tests/*.c
+	rm -rf generated coerce .libs tests/assign tests/lambda tests/multiline tests/number tests/negative_number tests/print tests/list tests/string tests/char tests/bool tests/*.c
 
