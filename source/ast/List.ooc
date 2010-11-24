@@ -9,8 +9,11 @@ import structs/ArrayList
  * Represents access to a variable
  */
 List: class extends Node {
+
+    parent : List = null
     body := ArrayList<Node> new()
 
+    init: func ~withParent (=parent) { }
     init: func { }
 
     add: func(n: Node) {

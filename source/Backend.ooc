@@ -7,7 +7,7 @@
 import structs/ArrayList
 import os/Process
 import io/[File, FileWriter]
-import ast/[Node, Expr, Number, BinaryOp, Program, Visitor, Assignment, VariableAccess, List]
+import ast/[Node, Expr, Number, BinaryOp, Program, Visitor, Assignment, VariableAccess, StringLiteral, CharLiteral, BoolLiteral, List]
 
 /**
  * Our simple backend, which creates a C file
@@ -80,6 +80,19 @@ Backend: class implements Visitor {
         fw write("\")")
     }
 
+    visitStringLiteral: func(s: StringLiteral) {
+        fw write(s toString())
+    }
+
+    visitCharLiteral: func(c: CharLiteral) {
+        "char!" println()
+        fw write(c toString())
+    }
+
+    visitBoolLiteral: func(b: BoolLiteral) {
+        "bool!" println()
+        fw write(b toString())
+    }
 }
 
 

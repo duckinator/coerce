@@ -4,7 +4,7 @@
  * @author Nick Markwell
  */
 
-import Number, BinaryOp, VariableAccess, Assignment, List
+import Number, BinaryOp, VariableAccess, Assignment, StringLiteral, CharLiteral, BoolLiteral, List
 
 Visitor: interface {
 
@@ -12,7 +12,10 @@ Visitor: interface {
     visitBinaryOp: func (b: BinaryOp)
     visitAssignment: func (a: Assignment)
     visitVariableAccess: func (v: VariableAccess)
-    visitList: func(l: List)
+    visitList: func (l: List)
+    visitStringLiteral: func (s: StringLiteral)
+    visitCharLiteral: func (c: CharLiteral)
+    visitBoolLiteral: func (b: BoolLiteral)
 
 }
 
