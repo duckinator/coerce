@@ -22,31 +22,25 @@ charLiteral =
       char '\''
       return ("char", [content])
 
-number =     try octalNumber
-         <|> try hexNumber
-         <|> try binNumber
-         <|> try decimalNegFloat
-         <|> try decimalFloat
-         <|> try decimalNegNumber
-         <|>     decimalNumber
+number =     negativeNumber
+         <|> positiveNumber
 
-decimalNegFloat =
+positiveNumber =     try octalNumber
+                 <|> try hexNumber
+                 <|> try binNumber
+                 <|> try floatNumber
+                 <|>     decimalNumber
+
+negativeNumber =
    do char '-'
-      start <- decDigits
-      char '.'
-      end  <- decDigits
-      return ("number.float", "-" ++ start ++ "." ++ end)
+      (t, v) <- positiveNumber
+      return (t, "-" ++ v)
 
-decimalFloat =
+floatNumber =
    do start <- decDigits
       char '.'
       end  <- decDigits
       return ("number.float", start ++ "." ++ end)
-
-decimalNegNumber =
-   do char '-'
-      content <- decDigits
-      return ("number.decimal", "-" ++ content)
 
 decimalNumber =
    do content <- decDigits
@@ -55,17 +49,17 @@ decimalNumber =
 octalNumber =
    do string "0c"
       content <- octDigits
-      return ("number.octal", content)
+      return ("number.octal", "0c" ++ content)
 
 hexNumber =
    do string "0x"
       content <- hexDigits
-      return ("number.hex", content)
+      return ("number.hex", "0x" ++ content)
 
 binNumber =
    do string "0b"
       content <- binDigits
-      return ("number.binary", content)
+      return ("number.binary", "0b" ++ content)
 
 decDigits = many1 digit
 octDigits = many1 octDigit
