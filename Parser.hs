@@ -1,8 +1,7 @@
 module Main where
 
---import Text.ParserCombinators.Parsec
-import Text.ParserCombinators.Parsec hiding (many, optional, (<|>))
-import Control.Applicative
+import Text.ParserCombinators.Parsec
+import Control.Applicative hiding (many, optional, (<|>))
 
 program = endBy1 statement eol
 statement =     stringLiteral
