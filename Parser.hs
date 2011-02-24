@@ -4,10 +4,59 @@ import Text.ParserCombinators.Parsec
 import Control.Applicative hiding (many, optional, (<|>))
 
 program = endBy1 statement eol
-statement =     stringLiteral
+statement =     commentLiteral
+--            <|> definitionLiteral
+--            <|> lambdaLiteral
+            <|> stringLiteral
             <|> charLiteral
             <|> number
             <?> "statement"
+
+commentLiteral =     try docCommentLiteral
+                 <|>     plainCommentLiteral
+
+docCommentLiteral =
+   do string ";;"
+      content <- many commentLiteralChar
+      return ("comment.doc", content)
+
+plainCommentLiteral =
+   do char ';'
+      content <- many commentLiteralChar
+      return ("comment.plain", content)
+
+{--
+definitionLiteral =
+   do name <- identifierLiteral
+      char ':'
+      _ <- whitespace
+      value <- statement
+      return ("define", ...)
+--}
+
+{--
+lambdaLiteral =
+   do char '['
+      args <- argListLiteral
+      _ <- whitespace
+      string '->'
+      _ <- whitespace
+      contents <- many statement
+      _ <- whitespace
+      char ']'
+      return ("lambda", ...)
+--}
+
+{--
+argListLiteral = many argLiteral
+
+argLiteral =
+   do value <- many argLiteralChars
+      _ <- whitespace
+      return value
+
+argLiteralChars = -- any character except whitespace or [ ] ( ) { } " ' \ ; : `
+--}
 
 stringLiteral =
    do char '"'
@@ -69,6 +118,8 @@ binDigit = char '0' <|> char '1'
 -- Handle escaped "s and 's
 stringLiteralChar = 	noneOf "\""
 charLiteralChar = noneOf "'"
+
+commentLiteralChar = noneOf "\r\n"
 
 eol =   try (string "\n\r")
     <|> try (string "\r\n")
