@@ -6,7 +6,7 @@ import Control.Applicative hiding (many, optional, (<|>))
 program = endBy1 statement eol
 statement =     commentLiteral
 --            <|> definitionLiteral
---            <|> lambdaLiteral
+            <|> lambdaLiteral
             <|> stringLiteral
             <|> charLiteral
             <|> number
@@ -17,50 +17,54 @@ commentLiteral =     try docCommentLiteral
 
 docCommentLiteral =
    do string ";;"
-      content <- many commentLiteralChar
+      content <- many1 commentLiteralChar
       return ("comment.doc", content)
 
 plainCommentLiteral =
    do char ';'
-      content <- many commentLiteralChar
+      content <- many1 commentLiteralChar
       return ("comment.plain", content)
 
-{--
 definitionLiteral =
    do name <- identifierLiteral
       char ':'
       _ <- whitespace
       value <- statement
-      return ("define", ...)
---}
+      return ("define", "...")
 
-{--
+
+identifierLiteral =
+  do start <- identifierStartLiteralChar
+     rest  <- many1 identifierLiteralChar
+     string ([start] ++ rest)
+
+identifierStartLiteralChar = oneOf "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-=./<>?~!@#$%^&*()_+|"
+identifierLiteralChar      = oneOf "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-=./<>?~!@#$%^&*()_+|"
+
 lambdaLiteral =
    do char '['
-      args <- argListLiteral
+--      args <- argListLiteral
       _ <- whitespace
-      string '->'
+      string "->"
       _ <- whitespace
-      contents <- many statement
+      contents <- many1 statement
       _ <- whitespace
       char ']'
-      return ("lambda", ...)
---}
+      return ("lambda", "...")
 
-{--
-argListLiteral = many argLiteral
+argListLiteral = many identifierLiteral --argLiteral
 
 argLiteral =
-   do value <- many argLiteralChars
+   do value <- identifierLiteral
       _ <- whitespace
       return value
 
-argLiteralChars = -- any character except whitespace or [ ] ( ) { } " ' \ ; : `
---}
+--argLiteralChar = noneOf " \t [](){}\"'\\;:`" -- any character except whitespace or [ ] ( ) { } " ' \ ; : `
+--argLiteralChar = oneOf "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-=./<>?~!@#$%^&*()_+|"
 
 stringLiteral =
    do char '"'
-      content <- many stringLiteralChar
+      content <- many1 stringLiteralChar
       char '"'
       return ("string", content)
 
@@ -113,18 +117,23 @@ decDigits = many1 digit
 octDigits = many1 octDigit
 hexDigits = many1 hexDigit
 binDigits = many1 binDigit
-binDigit = char '0' <|> char '1'
+binDigit  = char '0' <|> char '1'
 
--- Handle escaped "s and 's
+-- TODO: Handle escaped "s and 's
 stringLiteralChar = noneOf "\""
 charLiteralChar   = noneOf "'"
 
 commentLiteralChar = noneOf "\r\n"
 
+-- This probably should be whitespaceLiteral, but this is nicer imo
+whitespace            = many whitespaceCharLiteral
+whitespaceCharLiteral =   try space
+                      <|> try tab
+
 eol =   try (string "\n\r")
     <|> try (string "\r\n")
-    <|> string "\n"
-    <|> string "\r"
+    <|> try (string "\n")
+    <|>      string "\r"
     <?> "end of line"
 
 
