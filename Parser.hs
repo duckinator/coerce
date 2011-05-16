@@ -116,8 +116,8 @@ binDigits = many1 binDigit
 binDigit = char '0' <|> char '1'
 
 -- Handle escaped "s and 's
-stringLiteralChar = 	noneOf "\""
-charLiteralChar = noneOf "'"
+stringLiteralChar = noneOf "\""
+charLiteralChar   = noneOf "'"
 
 commentLiteralChar = noneOf "\r\n"
 
