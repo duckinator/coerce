@@ -4,17 +4,17 @@ import Text.ParserCombinators.Parsec
 import Control.Applicative hiding (many, optional, (<|>))
 
 program = endBy1 statement eol
-statement =     try commentLiteral
-            <|> try definitionLiteral
-            <|> try lambdaLiteral
-            <|> try stringLiteral
-            <|> try charLiteral
-            <|> try number
-            <|> identifierLiteral
-            <?> "statement"
+statement =   try commentLiteral
+          <|> try definitionLiteral
+          <|> try lambdaLiteral
+          <|> try stringLiteral
+          <|> try charLiteral
+          <|> try number
+          <|>     identifierLiteral
+          <?> "statement"
 
-commentLiteral =     try docCommentLiteral
-                 <|>     plainCommentLiteral
+commentLiteral =   try docCommentLiteral
+               <|>     plainCommentLiteral
 
 docCommentLiteral =
    do string ";;"
@@ -35,9 +35,9 @@ definitionLiteral =
 
 
 identifierLiteral =
-  do start <- identifierStartLiteralChar
-     rest  <- many identifierLiteralChar
-     return ("identifier", [start] ++ rest)
+   do start <- identifierStartLiteralChar
+      rest  <- many identifierLiteralChar
+      return ("identifier", [start] ++ rest)
 
 -- This SHOULD allow both - and > but i'm testing something
 identifierStartLiteralChar = oneOf "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=./<?~!@#$%^&*()_+|"
@@ -58,8 +58,7 @@ lambdaLiteral =
 argListLiteral = many argLiteral
 
 argLiteral =
-   do
-      value <- identifierLiteral
+   do value <- identifierLiteral
       _ <- whitespace
       return $ snd value
 
@@ -78,14 +77,14 @@ charLiteral =
       char '\''
       return ("char", [content])
 
-number =     negativeNumber
-         <|> positiveNumber
+number =   negativeNumber
+       <|> positiveNumber
 
-positiveNumber =     try octalNumber
-                 <|> try hexNumber
-                 <|> try binNumber
-                 <|> try floatNumber
-                 <|>     decimalNumber
+positiveNumber =   try octalNumber
+               <|> try hexNumber
+               <|> try binNumber
+               <|> try floatNumber
+               <|>     decimalNumber
 
 negativeNumber =
    do char '-'
