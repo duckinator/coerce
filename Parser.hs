@@ -10,6 +10,7 @@ statement =     commentLiteral
             <|> stringLiteral
             <|> charLiteral
             <|> number
+            <|> identifierLiteral
             <?> "statement"
 
 commentLiteral =     try docCommentLiteral
@@ -35,29 +36,32 @@ definitionLiteral =
 
 identifierLiteral =
   do start <- identifierStartLiteralChar
-     rest  <- many1 identifierLiteralChar
-     string ([start] ++ rest)
+     rest  <- many identifierLiteralChar
+     return ("identifier", [start] ++ rest)
 
-identifierStartLiteralChar = oneOf "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-=./<>?~!@#$%^&*()_+|"
-identifierLiteralChar      = oneOf "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-=./<>?~!@#$%^&*()_+|"
+-- This SHOULD allow both - and > but i'm testing something
+identifierStartLiteralChar = oneOf "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=./<?~!@#$%^&*()_+|"
+identifierLiteralChar      = oneOf "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890=./<?~!@#$%^&*()_+|"
 
 lambdaLiteral =
    do char '['
---      args <- argListLiteral
       _ <- whitespace
-      string "->"
+      args <- argListLiteral
+      _ <- whitespace
+      string "->" 
       _ <- whitespace
       contents <- many1 statement
       _ <- whitespace
       char ']'
       return ("lambda", "...")
 
-argListLiteral = many identifierLiteral --argLiteral
+argListLiteral = many argLiteral
 
 argLiteral =
-   do value <- identifierLiteral
+   do
+      value <- identifierLiteral
       _ <- whitespace
-      return value
+      return $ snd value
 
 --argLiteralChar = noneOf " \t [](){}\"'\\;:`" -- any character except whitespace or [ ] ( ) { } " ' \ ; : `
 --argLiteralChar = oneOf "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-=./<>?~!@#$%^&*()_+|"
