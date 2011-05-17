@@ -5,7 +5,7 @@ import Control.Applicative hiding (many, optional, (<|>))
 
 program = endBy1 statement eol
 statement =     commentLiteral
---            <|> definitionLiteral
+            <|> definitionLiteral
             <|> lambdaLiteral
             <|> stringLiteral
             <|> charLiteral
