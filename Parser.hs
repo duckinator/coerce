@@ -4,12 +4,12 @@ import Text.ParserCombinators.Parsec
 import Control.Applicative hiding (many, optional, (<|>))
 
 program = endBy1 statement eol
-statement =     commentLiteral
-            <|> definitionLiteral
-            <|> lambdaLiteral
-            <|> stringLiteral
-            <|> charLiteral
-            <|> number
+statement =     try commentLiteral
+            <|> try definitionLiteral
+            <|> try lambdaLiteral
+            <|> try stringLiteral
+            <|> try charLiteral
+            <|> try number
             <|> identifierLiteral
             <?> "statement"
 
