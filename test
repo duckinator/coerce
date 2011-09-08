@@ -1,0 +1,21 @@
+#!/bin/bash
+
+function test() {
+  file="tests/$1.coere"
+  echo $file
+  echo "$1"
+  echo "  Code:"
+  cat $file | sed 's/^/    /'
+  echo "  Results:"
+  cat $file | runhaskell Parser.hs | sed 's/^/    /'
+  echo
+  unset file
+}
+
+if [ "$1" != "" ]; then
+  test $1
+else
+  for x in tests/*; do
+    test "$(echo $x | cut -d'/' -f2 | cut -d'.' -f1)"
+  done
+fi
