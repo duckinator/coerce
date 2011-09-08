@@ -1,7 +1,17 @@
 #!/bin/bash
 
 function test() {
-  file="tests/$1.coere"
+  file=""
+
+  if [ -f "tests/$1.coere" ]; then
+    file="tests/$1.coere"
+  elif [ -f "$1" ]; then
+    file="$1"
+  else
+    echo "File $1 does not exist."
+    exit 1
+  fi
+
   echo $file
   echo "$1"
   echo "  Code:"
@@ -12,10 +22,25 @@ function test() {
   unset file
 }
 
-if [ "$1" != "" ]; then
-  test $1
-else
+help=false
+
+if [ "$1" = "help" ]; then
+  help=true
+elif [ "$1" = "all" ]; then
   for x in tests/*; do
     test "$(echo $x | cut -d'/' -f2 | cut -d'.' -f1)"
   done
+elif [ "$1" != "" ]; then
+  test $1
+else
+  help=true
+fi
+
+if $help; then
+  echo "Usage: $0 [test_name|test_path|all|help]"
+  echo
+  echo "all         Run all tests located in ./tests/"
+  echo "test_name   Name of test, located in ./tests/, to run"
+  echo "test_path   Full path to file to test"
+  echo "help        This"
 fi
